@@ -15,7 +15,6 @@ export function AuraScanner() {
   const [scanComplete, setScanComplete] = useState(false);
   const [showHint, setShowHint] = useState(true);
   const [readingStep, setReadingStep] = useState(0);
-  const [showSplashScreen, setShowSplashScreen] = useState(true);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -84,27 +83,6 @@ export function AuraScanner() {
     setReadingStep(0);
     startTimeRef.current = null;
   };
-
-  if (showSplashScreen) {
-    return (
-      <div
-        className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background cursor-pointer"
-        onClick={() => setShowSplashScreen(false)}
-      >
-        <div className="flex flex-col items-center justify-center animate-fadeIn space-y-4">
-          <Image
-            src="https://i.giphy.com/media/ASd0Ukj0y3qMM/giphy.webp"
-            alt="I Love You GIF"
-            width={300}
-            height={300}
-            unoptimized
-            className="rounded-lg"
-          />
-        </div>
-        <p className="absolute bottom-10 text-lg text-foreground/70 animate-pulse">Click to continue</p>
-      </div>
-    );
-  }
 
   if (scanComplete) {
     let content = null;
