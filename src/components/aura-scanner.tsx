@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from 'react';
@@ -125,14 +126,6 @@ export function AuraScanner() {
                     <Image
                         src="https://i.giphy.com/f9EmXxglhdhAj1bo28.webp"
                         alt="Aura GIF"
-                        width={150}
-                        height={150}
-                        unoptimized
-                        className="rounded-lg"
-                    />
-                    <Image
-                        src="https://i.giphy.com/media/ASd0Ukj0y3qMM/giphy.webp"
-                        alt="I Love You GIF"
                         width={150}
                         height={150}
                         unoptimized
