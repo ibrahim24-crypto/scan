@@ -59,15 +59,8 @@ export function AuraScanner() {
       if (readingStep === 0) {
         // "Analyzing..." -> "Beautiful"
         timeout = setTimeout(() => setReadingStep(1), 1500);
-      } else if (readingStep === 3) {
-        // After clicking continue from "Cute", show "Color"
-        // "Color" -> "Name"
-        timeout = setTimeout(() => setReadingStep(4), 2500);
-      } else if (readingStep === 4) {
-        // "Name" -> GIFs
-        timeout = setTimeout(() => setReadingStep(5), 2500);
       }
-      return () => clearTimeout(timeout);
+      return () => { if (timeout) clearTimeout(timeout); };
     }
   }, [scanComplete, readingStep]);
 
@@ -90,16 +83,13 @@ export function AuraScanner() {
   };
 
   const handleContinue = () => {
-    if (readingStep === 1) { // After "Beautiful"
-      setReadingStep(2);
-    } else if (readingStep === 2) { // After "Cute"
-      setReadingStep(3);
+    if (readingStep > 0 && readingStep < 5) {
+      setReadingStep(prev => prev + 1);
     }
   };
 
   if (scanComplete) {
     let content = null;
-    let showContinue = false;
 
     switch(readingStep) {
       case 0:
@@ -107,11 +97,9 @@ export function AuraScanner() {
         break;
       case 1:
         content = <p className="text-2xl animate-fadeIn">You are beautiful.</p>;
-        showContinue = true;
         break;
       case 2:
         content = <p className="text-2xl animate-fadeIn">You are cute.</p>;
-        showContinue = true;
         break;
       case 3:
         content = <p className="text-xl animate-fadeIn">Your favorite color is black.</p>;
@@ -138,22 +126,29 @@ export function AuraScanner() {
         break;
     }
 
+    const canContinue = readingStep > 0 && readingStep < 5;
+
     return (
-      <div className="flex flex-col items-center text-center animate-fadeIn max-w-lg mx-auto">
+      <div 
+        className="flex flex-col items-center text-center animate-fadeIn max-w-lg mx-auto w-full cursor-pointer"
+        onClick={handleContinue}
+        style={{ cursor: canContinue ? 'pointer' : 'default' }}
+      >
         <h1 className="text-4xl md:text-5xl font-headline mb-6 text-primary tracking-wide">Aura Analysis Complete</h1>
         <Card className="w-full bg-primary/5 border-primary/20 shadow-xl shadow-primary/10">
           <CardContent className="p-8 text-lg md:text-xl text-foreground/90 min-h-[400px] flex flex-col justify-center items-center gap-4">
             {content}
-            {showContinue && (
-              <Button onClick={handleContinue} className="mt-4 animate-fadeIn">
-                Click to continue
-              </Button>
-            )}
           </CardContent>
         </Card>
+        {canContinue && (
+          <p className="mt-4 text-sm text-foreground/60 animate-pulse">Click anywhere to continue</p>
+        )}
         <Button 
           variant="link"
-          onClick={resetScan}
+          onClick={(e) => {
+            e.stopPropagation();
+            resetScan();
+          }}
           className="mt-8 text-lg text-accent/80 hover:text-accent"
         >
           Scan Again
