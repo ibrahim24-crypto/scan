@@ -5,8 +5,9 @@ import { Fingerprint } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import Image from 'next/image';
 
-const SCAN_DURATION_MS = 2500; // 2.5 seconds
+const SCAN_DURATION_MS = 5000; // 5 seconds
 
 export function AuraScanner() {
   const [progress, setProgress] = useState(0);
@@ -72,10 +73,20 @@ export function AuraScanner() {
         <h1 className="text-4xl md:text-5xl font-headline mb-6 text-primary tracking-wide">Aura Analysis Complete</h1>
         <Card className="w-full bg-primary/5 border-primary/20 shadow-xl shadow-primary/10">
           <CardContent className="p-8 space-y-4 text-lg md:text-xl text-foreground/90">
+            <div className="flex justify-center mb-4">
+              <Image
+                src="https://i.giphy.com/f9EmXxglhdhAj1bo28.webp"
+                alt="Aura GIF"
+                width={200}
+                height={200}
+                unoptimized
+                className="rounded-lg"
+              />
+            </div>
             <p>You are unlimited beautiful.</p>
             <p>You are cute and you like chocolate.</p>
             <p>Your favorite color is black.</p>
-            <p>Your name is special and rare.</p>
+            <p>Your name is Charifa and it is special and rare.</p>
           </CardContent>
         </Card>
         <Button 
