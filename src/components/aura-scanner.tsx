@@ -54,18 +54,22 @@ export function AuraScanner() {
 
   useEffect(() => {
     if (scanComplete) {
-      const timeouts = [
-        setTimeout(() => setReadingStep(1), 1500),
-        setTimeout(() => setReadingStep(2), 3500),
-        setTimeout(() => setReadingStep(3), 5500),
-        setTimeout(() => setReadingStep(4), 7500),
-      ];
-
-      return () => {
-        timeouts.forEach(clearTimeout);
-      };
+      let timeout: NodeJS.Timeout;
+      if (readingStep === 0) {
+        // "Analyzing..." -> "Beautiful"
+        timeout = setTimeout(() => setReadingStep(1), 1500);
+      } else if (readingStep === 3) {
+        // After clicking continue from "Cute", show "Color"
+        // "Color" -> "Name"
+        timeout = setTimeout(() => setReadingStep(4), 2500);
+      } else if (readingStep === 4) {
+        // "Name" -> GIFs
+        timeout = setTimeout(() => setReadingStep(5), 2500);
+      }
+      return () => clearTimeout(timeout);
     }
-  }, [scanComplete]);
+  }, [scanComplete, readingStep]);
+
 
   useEffect(() => {
     return () => {
@@ -84,22 +88,37 @@ export function AuraScanner() {
     startTimeRef.current = null;
   };
 
+  const handleContinue = () => {
+    if (readingStep === 1) { // After "Beautiful"
+      setReadingStep(2);
+    } else if (readingStep === 2) { // After "Cute"
+      setReadingStep(3);
+    }
+  };
+
   if (scanComplete) {
     let content = null;
-    if (readingStep === 0) {
+    let showContinue = false;
+
+    switch(readingStep) {
+      case 0:
         content = <p>Analyzing your aura...</p>;
-    } else if (readingStep === 1) {
+        break;
+      case 1:
         content = <p className="text-2xl animate-fadeIn">You are beautiful.</p>;
-    } else if (readingStep === 2) {
+        showContinue = true;
+        break;
+      case 2:
         content = <p className="text-2xl animate-fadeIn">You are cute.</p>;
-    } else if (readingStep === 3) {
-        content = (
-            <div className="animate-fadeIn space-y-2 text-center">
-                <p>Your favorite color is black.</p>
-                <p>Your name is Charifa and it is special and rare.</p>
-            </div>
-        );
-    } else if (readingStep === 4) {
+        showContinue = true;
+        break;
+      case 3:
+        content = <p className="text-xl animate-fadeIn">Your favorite color is black.</p>;
+        break;
+      case 4:
+        content = <p className="text-xl animate-fadeIn">Your name is Charifa and it is special and rare.</p>;
+        break;
+      case 5:
         content = (
             <div className="flex flex-col items-center justify-center animate-fadeIn space-y-4">
                 <div className="flex items-center justify-center gap-4">
@@ -123,14 +142,20 @@ export function AuraScanner() {
                 <p className="text-3xl font-bold text-primary">I Love You!</p>
             </div>
         );
+        break;
     }
 
     return (
       <div className="flex flex-col items-center text-center animate-fadeIn max-w-lg mx-auto">
         <h1 className="text-4xl md:text-5xl font-headline mb-6 text-primary tracking-wide">Aura Analysis Complete</h1>
         <Card className="w-full bg-primary/5 border-primary/20 shadow-xl shadow-primary/10">
-          <CardContent className="p-8 text-lg md:text-xl text-foreground/90 min-h-[400px] flex flex-col justify-center items-center">
+          <CardContent className="p-8 text-lg md:text-xl text-foreground/90 min-h-[400px] flex flex-col justify-center items-center gap-4">
             {content}
+            {showContinue && (
+              <Button onClick={handleContinue} className="mt-4 animate-fadeIn">
+                Click to continue
+              </Button>
+            )}
           </CardContent>
         </Card>
         <Button 
