@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['Belleza', 'sans-serif'],
+        headline: ['Belleza', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -88,10 +88,21 @@ export default {
             height: '0',
           },
         },
+        'aura-pulse': {
+          '50%': {
+            boxShadow: '0 0 25px 5px hsl(var(--primary) / 0.4)',
+          },
+        },
+        fadeIn: {
+          from: { opacity: '0', transform: 'translateY(1rem)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'aura-pulse': 'aura-pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        fadeIn: 'fadeIn 1s ease-out forwards',
       },
     },
   },
