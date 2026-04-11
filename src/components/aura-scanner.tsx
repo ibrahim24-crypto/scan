@@ -15,6 +15,7 @@ export function AuraScanner() {
   const [scanComplete, setScanComplete] = useState(false);
   const [showHint, setShowHint] = useState(true);
   const [readingStep, setReadingStep] = useState(0);
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -84,6 +85,27 @@ export function AuraScanner() {
     startTimeRef.current = null;
   };
 
+  if (showSplashScreen) {
+    return (
+      <div
+        className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background cursor-pointer"
+        onClick={() => setShowSplashScreen(false)}
+      >
+        <div className="flex flex-col items-center justify-center animate-fadeIn space-y-4">
+          <Image
+            src="https://i.giphy.com/media/ASd0Ukj0y3qMM/giphy.webp"
+            alt="I Love You GIF"
+            width={300}
+            height={300}
+            unoptimized
+            className="rounded-lg"
+          />
+        </div>
+        <p className="absolute bottom-10 text-lg text-foreground/70 animate-pulse">Click to continue</p>
+      </div>
+    );
+  }
+
   if (scanComplete) {
     let content = null;
     if (readingStep === 0) {
@@ -97,29 +119,29 @@ export function AuraScanner() {
             <div className="animate-fadeIn space-y-2 text-center">
                 <p>Your favorite color is black.</p>
                 <p>Your name is Charifa and it is special and rare.</p>
-                <div className="flex justify-center pt-4">
-                    <Image
-                    src="https://i.giphy.com/f9EmXxglhdhAj1bo28.webp"
-                    alt="Aura GIF"
-                    width={150}
-                    height={150}
-                    unoptimized
-                    className="rounded-lg"
-                    />
-                </div>
             </div>
         );
     } else if (readingStep === 4) {
         content = (
             <div className="flex flex-col items-center justify-center animate-fadeIn space-y-4">
-                <Image
-                src="https://i.giphy.com/media/ASd0Ukj0y3qMM/giphy.webp"
-                alt="I Love You GIF"
-                width={250}
-                height={250}
-                unoptimized
-                className="rounded-lg"
-                />
+                <div className="flex items-center justify-center gap-4">
+                    <Image
+                        src="https://i.giphy.com/f9EmXxglhdhAj1bo28.webp"
+                        alt="Aura GIF"
+                        width={150}
+                        height={150}
+                        unoptimized
+                        className="rounded-lg"
+                    />
+                    <Image
+                        src="https://i.giphy.com/media/ASd0Ukj0y3qMM/giphy.webp"
+                        alt="I Love You GIF"
+                        width={150}
+                        height={150}
+                        unoptimized
+                        className="rounded-lg"
+                    />
+                </div>
                 <p className="text-3xl font-bold text-primary">I Love You!</p>
             </div>
         );
