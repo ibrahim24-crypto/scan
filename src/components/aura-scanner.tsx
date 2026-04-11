@@ -7,13 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 
-const SCAN_DURATION_MS = 5000; // 5 seconds
+const SCAN_DURATION_MS = 8000; // 8 seconds
 
 export function AuraScanner() {
   const [progress, setProgress] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
   const [scanComplete, setScanComplete] = useState(false);
   const [showHint, setShowHint] = useState(true);
+  const [readingStep, setReadingStep] = useState(0);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -52,6 +53,21 @@ export function AuraScanner() {
   }, [scanComplete]);
 
   useEffect(() => {
+    if (scanComplete) {
+      const timeouts = [
+        setTimeout(() => setReadingStep(1), 1500),
+        setTimeout(() => setReadingStep(2), 3500),
+        setTimeout(() => setReadingStep(3), 5500),
+        setTimeout(() => setReadingStep(4), 7500),
+      ];
+
+      return () => {
+        timeouts.forEach(clearTimeout);
+      };
+    }
+  }, [scanComplete]);
+
+  useEffect(() => {
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -64,29 +80,57 @@ export function AuraScanner() {
     setProgress(0);
     setShowHint(true);
     setIsScanning(false);
+    setReadingStep(0);
     startTimeRef.current = null;
   };
 
   if (scanComplete) {
+    let content = null;
+    if (readingStep === 0) {
+        content = <p>Analyzing your aura...</p>;
+    } else if (readingStep === 1) {
+        content = <p className="text-2xl animate-fadeIn">You are beautiful.</p>;
+    } else if (readingStep === 2) {
+        content = <p className="text-2xl animate-fadeIn">You are cute.</p>;
+    } else if (readingStep === 3) {
+        content = (
+            <div className="animate-fadeIn space-y-2 text-center">
+                <p>Your favorite color is black.</p>
+                <p>Your name is Charifa and it is special and rare.</p>
+                <div className="flex justify-center pt-4">
+                    <Image
+                    src="https://i.giphy.com/f9EmXxglhdhAj1bo28.webp"
+                    alt="Aura GIF"
+                    width={150}
+                    height={150}
+                    unoptimized
+                    className="rounded-lg"
+                    />
+                </div>
+            </div>
+        );
+    } else if (readingStep === 4) {
+        content = (
+            <div className="flex flex-col items-center justify-center animate-fadeIn space-y-4">
+                <Image
+                src="https://i.giphy.com/media/ASd0Ukj0y3qMM/giphy.webp"
+                alt="I Love You GIF"
+                width={250}
+                height={250}
+                unoptimized
+                className="rounded-lg"
+                />
+                <p className="text-3xl font-bold text-primary">I Love You!</p>
+            </div>
+        );
+    }
+
     return (
       <div className="flex flex-col items-center text-center animate-fadeIn max-w-lg mx-auto">
         <h1 className="text-4xl md:text-5xl font-headline mb-6 text-primary tracking-wide">Aura Analysis Complete</h1>
         <Card className="w-full bg-primary/5 border-primary/20 shadow-xl shadow-primary/10">
-          <CardContent className="p-8 space-y-4 text-lg md:text-xl text-foreground/90">
-            <div className="flex justify-center mb-4">
-              <Image
-                src="https://i.giphy.com/f9EmXxglhdhAj1bo28.webp"
-                alt="Aura GIF"
-                width={200}
-                height={200}
-                unoptimized
-                className="rounded-lg"
-              />
-            </div>
-            <p>You are unlimited beautiful.</p>
-            <p>You are cute and you like chocolate.</p>
-            <p>Your favorite color is black.</p>
-            <p>Your name is Charifa and it is special and rare.</p>
+          <CardContent className="p-8 text-lg md:text-xl text-foreground/90 min-h-[400px] flex flex-col justify-center items-center">
+            {content}
           </CardContent>
         </Card>
         <Button 
