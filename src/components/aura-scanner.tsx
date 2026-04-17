@@ -20,6 +20,18 @@ export function AuraScanner() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number | null>(null);
 
+  useEffect(() => {
+    if (readingStep === 6) {
+      document.documentElement.classList.add('dark-black');
+    } else {
+      document.documentElement.classList.remove('dark-black');
+    }
+    
+    return () => {
+      document.documentElement.classList.remove('dark-black');
+    }
+  }, [readingStep]);
+
   const startScan = useCallback(() => {
     if (isScanning || scanComplete) return;
 
