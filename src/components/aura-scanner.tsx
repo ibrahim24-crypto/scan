@@ -83,7 +83,7 @@ export function AuraScanner() {
   };
 
   const handleContinue = () => {
-    if (readingStep > 0 && readingStep < 5) {
+    if (readingStep > 0 && readingStep < 6) {
       setReadingStep(prev => prev + 1);
     }
   };
@@ -124,9 +124,12 @@ export function AuraScanner() {
             </div>
         );
         break;
+      case 6:
+        content = <p className="text-xl animate-fadeIn">Even if you don't, I'd bring you things I've never tasted... however, I love you.</p>;
+        break;
     }
 
-    const canContinue = readingStep > 0 && readingStep < 5;
+    const canContinue = readingStep > 0 && readingStep < 6;
 
     return (
       <div 
